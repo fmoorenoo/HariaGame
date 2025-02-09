@@ -10,10 +10,10 @@ public class AnimationStateController : MonoBehaviour
     int isWalkingHash;
     int isRunningHash;
 
-    public float walkSpeed = 2f;
-    public float runSpeed = 5f;
-    public float gravity = 9.81f;  // Para simular caída
-    private Vector3 velocity;  // Almacena la velocidad vertical
+    public float walkSpeed = 3f;
+    public float runSpeed = 8f;
+    public float gravity = 9.81f;
+    private Vector3 velocity;
 
     void Start()
     {
