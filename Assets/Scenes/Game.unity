@@ -5012,8 +5012,8 @@ Transform:
   m_GameObject: {fileID: 933962921}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 25.3307, y: 0.0001, z: -42.5456}
-  m_LocalScale: {x: 16.187384, y: 1, z: 19.75068}
+  m_LocalPosition: {x: 25.3307, y: 0.0001, z: -42.1301}
+  m_LocalScale: {x: 16.187384, y: 1, z: 19.833633}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1206919093}
@@ -5404,7 +5404,7 @@ Skybox:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
-  m_CustomSkybox: {fileID: 2100000, guid: 8b7dd0809c7c6498789fa32a61eaa6cb, type: 2}
+  m_CustomSkybox: {fileID: 2100000, guid: f2b5f3f20933f434e850db1b710542fd, type: 2}
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7526,7 +7526,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: bacc7ee8fd0869d45be470f049e53d8b, type: 2}
+  - {fileID: 2100000, guid: 1bc9c5ce01203a64f80002430e002ce7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
