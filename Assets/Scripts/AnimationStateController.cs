@@ -26,10 +26,10 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        float horizontal = Input.GetAxis("Horizontal");  // Movimiento lateral (A-D)
-        float vertical = Input.GetAxis("Vertical");      // Movimiento hacia adelante/atrás (W-S)
+        float horizontal = Input.GetAxis("Horizontal");  
+        float vertical = Input.GetKey(KeyCode.W) ? 1f : 0f;      
 
-        bool isRunning = Input.GetKey(KeyCode.LeftShift);
+        bool isRunning = Input.GetKey(KeyCode.LeftShift) && vertical > 0;
         bool isWalking = vertical != 0 || horizontal != 0;
 
         animator.SetBool(isWalkingHash, isWalking);
@@ -37,14 +37,12 @@ public class PlayerController : MonoBehaviour
 
         float speed = isRunning ? runSpeed : walkSpeed;
         
-        // Obtener dirección según la cámara
         Vector3 moveDirection = Camera.main.transform.forward * vertical + Camera.main.transform.right * horizontal;
-        moveDirection.y = 0;  // No queremos que se mueva en el eje Y
+        moveDirection.y = 0;  
 
         if (moveDirection.magnitude > 1)
             moveDirection.Normalize();
 
-        // Aplicar gravedad manualmente
         if (characterController.isGrounded)
         {
             velocity.y = 0f;
@@ -54,10 +52,8 @@ public class PlayerController : MonoBehaviour
             velocity.y -= gravity * Time.deltaTime;
         }
 
-        // Mover al personaje
         characterController.Move((moveDirection * speed + velocity) * Time.deltaTime);
 
-        // Hacer que el personaje mire en la dirección del movimiento
         if (moveDirection != Vector3.zero)
         {
             transform.forward = Vector3.Slerp(transform.forward, moveDirection, 10f * Time.deltaTime);
