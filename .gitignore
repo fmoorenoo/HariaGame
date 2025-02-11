@@ -1,0 +1,40 @@
+# Archivos generados por Unity que no deben subirse
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+MemoryCaptures/
+
+# Archivos de usuario específicos de Unity
+UserSettings/
+
+# Archivos de cache y backups
+*.bak
+*.tmp
+*.pidb
+*.svd
+
+# Configuración de VSCode y Rider
+.vscode/
+.idea/
+
+# Configuración de Visual Studio
+*.csproj
+*.sln
+*.suo
+*.user
+*.unityproj
+*.pidb
+*.booproj
+*.sdf
+*.db
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Ignorar paquetes descargados
+Packages/manifest.json
+Packages/packages-lock.json
