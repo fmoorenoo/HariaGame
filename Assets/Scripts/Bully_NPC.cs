@@ -40,7 +40,6 @@ public class Bully_NPC : MonoBehaviour
         {
             if (persiguiendo)
             {
-                Debug.Log("Jugador perdido, volviendo a patrullar...");
                 persiguiendo = false;
                 Objetivo = Objetivos[Random.Range(0, Objetivos.Length)];
             }
@@ -51,7 +50,6 @@ public class Bully_NPC : MonoBehaviour
             if (Distancia < 2)
             {
                 Objetivo = Objetivos[Random.Range(0, Objetivos.Length)];
-                Debug.Log("Nuevo objetivo asignado: " + Objetivo.name);
             }
 
             AI.destination = Objetivo.position;
@@ -66,12 +64,10 @@ public class Bully_NPC : MonoBehaviour
         Vector3 direccionJugador = (Jugador.position - transform.position).normalized;
         float distanciaJugador = Vector3.Distance(transform.position, Jugador.position);
 
-        Debug.Log($"Distancia al jugador: {distanciaJugador}");
 
         if (distanciaJugador < RangoVision)
         {
             float angulo = Vector3.Angle(transform.forward, direccionJugador);
-            Debug.Log($"Ángulo con el jugador: {angulo}");
 
             if (angulo < AnguloVision / 2)
             {
@@ -80,7 +76,6 @@ public class Bully_NPC : MonoBehaviour
                 {
                     if (hit.transform == Jugador)
                     {
-                        Debug.Log("Jugador está dentro de la línea de visión.");
                         return true;
                     }
                 }
