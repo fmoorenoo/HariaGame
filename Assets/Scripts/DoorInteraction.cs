@@ -1,11 +1,12 @@
 using UnityEngine;
-using UnityEngine.UI; // Necesario si usas un UI Text
+using UnityEngine.UI; 
 
 public class DoorInteraction : MonoBehaviour
 {
     public Vector3 teleportPosition = new Vector3(100, 1, 100);
     public GameObject player;
     public GameObject interactionTextUI;
+    public static bool isTeleported = false; 
 
     private bool isPlayerNear = false;
 
@@ -26,22 +27,23 @@ public class DoorInteraction : MonoBehaviour
                 {
                     cc.enabled = false;
                     player.transform.position = teleportPosition;
+                    player.transform.Rotate(0, -90, 0);
                     cc.enabled = true;
                 }
                 else
                 {
                     player.transform.position = teleportPosition;
+                    player.transform.Rotate(0, -90, 0);
                 }
 
                 if (interactionTextUI != null)
                     interactionTextUI.SetActive(false);
 
                 isPlayerNear = false;
+                isTeleported = true;
             }
         }
     }
-
-
 
     void OnTriggerEnter(Collider other)
     {
