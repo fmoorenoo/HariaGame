@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class NPC_name : MonoBehaviour
 {
-    public Transform camera;
+    public Transform playerCamera;
     
-    // Update is called once per frame
     void LateUpdate()
     {
-        transform.LookAt(transform.position + camera.forward);
+        transform.LookAt(transform.position + playerCamera.forward);
     }
 }
