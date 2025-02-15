@@ -14,13 +14,14 @@ public class PlayerController : MonoBehaviour
     public float walkSpeed = 3f;
     public float runSpeed = 6f;
     public float gravity = 9.81f;
+    public bool isImmobilized = false;
     private Vector3 velocity;
 
-    [Range(0f, 1f)] public float walkVolume = 0.7f;  // Volumen al caminar
-    [Range(0f, 1f)] public float runVolume = 1f;    // Volumen al correr
+    [Range(0f, 1f)] public float walkVolume = 0.7f;
+    [Range(0f, 1f)] public float runVolume = 1f;
 
-    [Range(0.5f, 2f)] public float walkPitch = 1f;  // Velocidad del sonido al caminar
-    [Range(0.5f, 2f)] public float runPitch = 1.2f; // Velocidad del sonido al correr
+    [Range(0.5f, 2f)] public float walkPitch = 1f;
+    [Range(0.5f, 2f)] public float runPitch = 1.2f;
 
     private int isWalkingHash;
     private int isRunningHash;
@@ -34,11 +35,20 @@ public class PlayerController : MonoBehaviour
         isWalkingHash = Animator.StringToHash("isWalking");
         isRunningHash = Animator.StringToHash("isRunning");
 
-        audioSource.loop = true; // Asegurar que el sonido de pasos sea en bucle
+        audioSource.loop = true;
     }
 
     void Update()
     {
+        if (isImmobilized)
+        {
+            if (audioSource.isPlaying)
+            {
+                audioSource.Stop();
+            }
+            return;
+        }
+
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetKey(KeyCode.W) ? 1f : 0f;
 
@@ -74,6 +84,8 @@ public class PlayerController : MonoBehaviour
 
         HandleFootstepSounds(isWalking, isRunning);
     }
+
+
 
     void HandleFootstepSounds(bool isWalking, bool isRunning)
     {

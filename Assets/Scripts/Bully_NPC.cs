@@ -17,9 +17,13 @@ public class Bully_NPC : MonoBehaviour
     private bool persiguiendo = false;
     private bool golpeando = false;
     private bool golpeIniciado = false;
+    private PlayerController playerController;
 
     public Animator animator;
     private Animator jugadorAnimator;
+
+    public AudioSource golpeAudio; 
+    public float tiempoEsperaGolpe = 0.5f; 
 
     void Start()
     {
@@ -44,6 +48,7 @@ public class Bully_NPC : MonoBehaviour
         if (Jugador != null)
         {
             jugadorAnimator = Jugador.GetComponent<Animator>();
+            playerController = Jugador.GetComponent<PlayerController>();
             if (jugadorAnimator == null)
             {
                 Debug.LogError("El jugador no tiene un Animator.");
@@ -53,12 +58,16 @@ public class Bully_NPC : MonoBehaviour
         {
             Debug.LogError("Jugador no asignado.");
         }
+
+        if (golpeAudio == null)
+        {
+            golpeAudio = GetComponent<AudioSource>(); 
+        }
     }
 
     void Update()
     {
-        if (golpeando) return;  // No hacer nada si está golpeando
-
+        if (golpeando) return;
         if (PuedeVerJugador())
         {
             AI.speed = VelocidadPersecucion;
@@ -144,39 +153,44 @@ public class Bully_NPC : MonoBehaviour
     IEnumerator GolpearJugador()
     {
         golpeando = true;
-        AI.isStopped = true; // Detiene al NPC
+        AI.isStopped = true;
         animator.SetBool("isPunching", true);
 
-        // 🔹 Activar animación de caída en el jugador
+        yield return new WaitForSeconds(tiempoEsperaGolpe); 
+
+        if (golpeAudio != null)
+        {
+            golpeAudio.Play();
+        }
+
         if (jugadorAnimator != null)
         {
             jugadorAnimator.SetBool("isFalling", true);
         }
 
-        // 🔹 Esperar a que la animación de golpe realmente inicie
-        yield return new WaitForSeconds(0.1f);
-
-        // 🔹 Asegurar que la animación cambió antes de obtener su duración
-        while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Golpear"))
+        if (playerController != null)
         {
-            yield return null; // Esperar un frame
+            playerController.isImmobilized = true;
         }
 
-        // 🔹 Obtener duración correcta de la animación de golpe
+        yield return new WaitForSeconds(0.1f);
+
+        while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Golpear"))
+        {
+            yield return null;
+        }
+
         float duracionGolpe = animator.GetCurrentAnimatorStateInfo(0).length;
         yield return new WaitForSeconds(duracionGolpe);
 
-        // 🔹 Desactivar animación de golpear en NPC
         animator.SetBool("isPunching", false);
 
-        // 🔹 Esperar duración de animación de caída del jugador antes de permitir que se levante
         if (jugadorAnimator != null)
         {
             yield return new WaitForSeconds(jugadorAnimator.GetCurrentAnimatorStateInfo(0).length);
             jugadorAnimator.SetBool("isFalling", false);
         }
 
-        // 🔹 Reactivar movimiento del NPC
         AI.isStopped = false;
         golpeando = false;
         golpeIniciado = false;

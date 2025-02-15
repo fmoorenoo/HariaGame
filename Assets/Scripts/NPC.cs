@@ -8,15 +8,24 @@ public class NPC : MonoBehaviour
     public NavMeshAgent AI;
     public float Velocidad;
     public Transform[] Objetivos;
-    Transform Objetivo;
+    private Transform Objetivo;
     public float Distancia;
 
     void Start()
     {
-        Objetivo = Objetivos[Random.Range(0, Objetivos.Length)];
+        if (Objetivos.Length > 0)
+        {
+            Objetivo = Objetivos[Random.Range(0, Objetivos.Length)];
+
+            
+            transform.position = Objetivo.position;
+        }
+        else
+        {
+            Debug.LogError("No hay objetivos asignados.");
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
         Distancia = Vector3.Distance(transform.position, Objetivo.position);
@@ -27,7 +36,6 @@ public class NPC : MonoBehaviour
         }
 
         AI.destination = Objetivo.position;
-
         AI.speed = Velocidad;
     }
 }

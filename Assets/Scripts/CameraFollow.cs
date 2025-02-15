@@ -10,6 +10,17 @@ public class CameraFollow : MonoBehaviour
     public float lookAtHeightOffset = 1.5f;
     public LayerMask obstacleMask;
     public float minDistance = 1.0f;
+    public float immobilizedLookAtOffset = 0.5f; 
+    public float immobilizedDistanceOffset = 2f; 
+    private PlayerController playerController;
+
+    void Start()
+    {
+        if (target != null)
+        {
+            playerController = target.GetComponent<PlayerController>();
+        }
+    }
 
     void LateUpdate()
     {
@@ -33,17 +44,25 @@ public class CameraFollow : MonoBehaviour
 
         if (DoorInteraction.isTeleported)
         {
-            transform.position = desiredPosition; 
-            DoorInteraction.isTeleported = false; 
+            transform.position = desiredPosition;
+            DoorInteraction.isTeleported = false;
         }
         else
         {
             transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
         }
 
-        float extraLookUp = (target.position.y < -10) ? 1.0f : 0f;
-
-        Vector3 lookAtTarget = target.position + Vector3.up * (lookAtHeightOffset + extraLookUp);
-        transform.LookAt(lookAtTarget);
+        if (playerController != null && playerController.isImmobilized)
+        {
+            Vector3 immobilizedPosition = target.position - target.forward * immobilizedDistanceOffset + Vector3.down * immobilizedLookAtOffset;
+            transform.position = Vector3.Lerp(transform.position, immobilizedPosition, smoothSpeed * Time.deltaTime);
+            transform.LookAt(target.position + Vector3.down * immobilizedLookAtOffset);
+        }
+        else
+        {
+            float extraLookUp = (target.position.y < -10) ? 1.0f : 0f;
+            Vector3 lookAtTarget = target.position + Vector3.up * (lookAtHeightOffset + extraLookUp);
+            transform.LookAt(lookAtTarget);
+        }
     }
 }
