@@ -22,8 +22,9 @@ public class Bully_NPC : MonoBehaviour
     public Animator animator;
     private Animator jugadorAnimator;
 
-    public AudioSource golpeAudio; 
-    public float tiempoEsperaGolpe = 0.5f; 
+    public AudioSource golpeAudio;
+    public float tiempoEsperaGolpe = 0.5f;
+    public float velocidadRotacion = 8f; 
 
     void Start()
     {
@@ -61,7 +62,7 @@ public class Bully_NPC : MonoBehaviour
 
         if (golpeAudio == null)
         {
-            golpeAudio = GetComponent<AudioSource>(); 
+            golpeAudio = GetComponent<AudioSource>();
         }
     }
 
@@ -119,7 +120,7 @@ public class Bully_NPC : MonoBehaviour
             }
         }
 
-        if (Vector3.Distance(transform.position, Jugador.position) < 3f && !golpeando && !golpeIniciado)
+        if (Vector3.Distance(transform.position, Jugador.position) < 2f && !golpeando && !golpeIniciado)
         {
             golpeIniciado = true;
             StartCoroutine(GolpearJugador());
@@ -154,9 +155,12 @@ public class Bully_NPC : MonoBehaviour
     {
         golpeando = true;
         AI.isStopped = true;
+
+        yield return StartCoroutine(MirarHaciaJugador());
+
         animator.SetBool("isPunching", true);
 
-        yield return new WaitForSeconds(tiempoEsperaGolpe); 
+        yield return new WaitForSeconds(tiempoEsperaGolpe);
 
         if (golpeAudio != null)
         {
@@ -194,5 +198,20 @@ public class Bully_NPC : MonoBehaviour
         AI.isStopped = false;
         golpeando = false;
         golpeIniciado = false;
+    }
+
+    IEnumerator MirarHaciaJugador()
+    {
+        Vector3 direccion = (Jugador.position - transform.position).normalized;
+        direccion.y = 0; 
+        Quaternion rotacionObjetivo = Quaternion.LookRotation(direccion);
+
+        while (Quaternion.Angle(transform.rotation, rotacionObjetivo) > 5f) 
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotacionObjetivo, velocidadRotacion * Time.deltaTime);
+            yield return null;
+        }
+
+        transform.rotation = rotacionObjetivo; 
     }
 }
