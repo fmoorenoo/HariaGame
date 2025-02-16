@@ -7,18 +7,22 @@ public class NPCInteraction : MonoBehaviour
     public GameObject player;
     public GameObject interactionTextUI;
     public AudioSource audioSource;
-    public string subtitlesText = "Eres imbécil... Salpica de aquí anda.";
+    public string subtitlesText = "A ver... Me vas a tener que traer todas las monedas del patio. Y no tengo todo el día.";
 
     private bool isPlayerNear = false;
     private bool isAudioPlaying = false;
+    private bool hasActivatedFeatures = false; 
     private GameObject subtitlesUI;
     private Text uiTextComponent;
     private TextMeshProUGUI tmpTextComponent;
 
     public GameObject timerUI;
-    public GameObject coinCounterUI; 
+    public GameObject coinCounterUI;
     public CoinCounter coinCounterScript;
-    public GameObject[] coins; 
+    public GameObject[] coins;
+
+    public GameObject wetFloor;
+    public GameObject water;
 
     void Start()
     {
@@ -51,6 +55,9 @@ public class NPCInteraction : MonoBehaviour
                 coin.SetActive(false);
             }
         }
+
+        if (wetFloor != null) wetFloor.SetActive(false);
+        if (water != null) water.SetActive(false);
     }
 
     void Update()
@@ -115,23 +122,38 @@ public class NPCInteraction : MonoBehaviour
             if (subtitlesUI != null)
                 subtitlesUI.SetActive(false);
 
-            if (timerUI != null)
+            if (!hasActivatedFeatures) 
             {
-                timerUI.SetActive(true);
-                timerUI.GetComponent<Timer>().StartTimer();
-            }
-
-            if (coinCounterUI != null)
-            {
-                coinCounterUI.SetActive(true);
-            }
-
-            if (coins != null)
-            {
-                foreach (GameObject coin in coins)
+                if (timerUI != null)
                 {
-                    coin.SetActive(true);
+                    timerUI.SetActive(true);
+                    timerUI.GetComponent<Timer>().StartTimer();
                 }
+
+                if (coinCounterUI != null)
+                {
+                    coinCounterUI.SetActive(true);
+                }
+
+                if (coins != null)
+                {
+                    foreach (GameObject coin in coins)
+                    {
+                        coin.SetActive(true);
+                    }
+                }
+
+                if (wetFloor != null)
+                {
+                    wetFloor.SetActive(true);
+                }
+
+                if (water != null)
+                {
+                    water.SetActive(true);
+                }
+
+                hasActivatedFeatures = true; 
             }
         }
     }

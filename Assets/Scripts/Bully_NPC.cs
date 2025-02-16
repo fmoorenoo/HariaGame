@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -17,17 +16,22 @@ public class Bully_NPC : MonoBehaviour
     private bool persiguiendo = false;
     private bool golpeando = false;
     private bool golpeIniciado = false;
+    private bool cayendo = false;
     private PlayerController playerController;
 
     public Animator animator;
     private Animator jugadorAnimator;
 
     public AudioSource golpeAudio;
+    public AudioSource caidaAudio; // AudioSource para el sonido de caída
     public float tiempoEsperaGolpe = 0.5f;
-    public float velocidadRotacion = 8f; 
+    public float velocidadRotacion = 8f;
+
+    private Collider npcCollider;
 
     void Start()
     {
+        npcCollider = GetComponent<Collider>();
         if (Objetivos.Length > 0)
         {
             Objetivo = Objetivos[Random.Range(0, Objetivos.Length)];
@@ -64,11 +68,17 @@ public class Bully_NPC : MonoBehaviour
         {
             golpeAudio = GetComponent<AudioSource>();
         }
+
+        if (caidaAudio == null)
+        {
+            caidaAudio = GetComponent<AudioSource>();
+        }
     }
 
     void Update()
     {
-        if (golpeando) return;
+        if (golpeando || cayendo) return;
+
         if (PuedeVerJugador())
         {
             AI.speed = VelocidadPersecucion;
@@ -203,15 +213,42 @@ public class Bully_NPC : MonoBehaviour
     IEnumerator MirarHaciaJugador()
     {
         Vector3 direccion = (Jugador.position - transform.position).normalized;
-        direccion.y = 0; 
+        direccion.y = 0;
         Quaternion rotacionObjetivo = Quaternion.LookRotation(direccion);
 
-        while (Quaternion.Angle(transform.rotation, rotacionObjetivo) > 5f) 
+        while (Quaternion.Angle(transform.rotation, rotacionObjetivo) > 5f)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, rotacionObjetivo, velocidadRotacion * Time.deltaTime);
             yield return null;
         }
 
-        transform.rotation = rotacionObjetivo; 
+        transform.rotation = rotacionObjetivo;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Water") && !cayendo)
+        {
+            cayendo = true;
+            AI.isStopped = true;
+            animator.SetBool("isFalling", true);
+
+            if (caidaAudio != null)
+            {
+                caidaAudio.Play();
+            }
+
+            StartCoroutine(ActivarTriggerTrasCaer());
+        }
+    }
+
+    IEnumerator ActivarTriggerTrasCaer()
+    {
+        yield return new WaitForSeconds(1f);
+
+        if (npcCollider != null)
+        {
+            npcCollider.isTrigger = true;
+        }
     }
 }

@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -25,6 +24,10 @@ public class PlayerController : MonoBehaviour
 
     private int isWalkingHash;
     private int isRunningHash;
+    private int isFallingHash;
+
+    public TextMeshProUGUI countdownText; 
+    private bool hasFallen = false; 
 
     void Start()
     {
@@ -34,6 +37,7 @@ public class PlayerController : MonoBehaviour
 
         isWalkingHash = Animator.StringToHash("isWalking");
         isRunningHash = Animator.StringToHash("isRunning");
+        isFallingHash = Animator.StringToHash("isFalling"); 
 
         audioSource.loop = true;
     }
@@ -47,6 +51,11 @@ public class PlayerController : MonoBehaviour
                 audioSource.Stop();
             }
             return;
+        }
+
+        if (countdownText != null && countdownText.text.Trim() == "00:00" && !hasFallen)
+        {
+            TriggerFall();
         }
 
         float horizontal = Input.GetAxis("Horizontal");
@@ -85,8 +94,6 @@ public class PlayerController : MonoBehaviour
         HandleFootstepSounds(isWalking, isRunning);
     }
 
-
-
     void HandleFootstepSounds(bool isWalking, bool isRunning)
     {
         if (isRunning)
@@ -116,5 +123,14 @@ public class PlayerController : MonoBehaviour
                 audioSource.Stop();
             }
         }
+    }
+
+    void TriggerFall()
+    {
+        hasFallen = true; 
+
+
+        isImmobilized = true; 
+        animator.SetBool(isFallingHash, true);
     }
 }

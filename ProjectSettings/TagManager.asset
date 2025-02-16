@@ -7,6 +7,7 @@ TagManager:
   - Subtitles
   - Character
   - SenderTMP
+  - Water
   layers:
   - Default
   - TransparentFX
@@ -14,9 +15,9 @@ TagManager:
   - Obstacles
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Coins
+  - NPC
+  - Player
   - 
   - 
   - 

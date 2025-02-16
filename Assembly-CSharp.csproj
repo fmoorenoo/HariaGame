@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Coin.cs" />
     <Compile Include="Assets\Scripts\NPC.cs" />
+    <Compile Include="Assets\Scripts\EnemyCoin.cs" />
     <Compile Include="Assets\Scripts\AnimationStateController.cs" />
     <Compile Include="Assets\Scripts\NPC_name.cs" />
     <Compile Include="Assets\Scripts\Bully_NPC.cs" />

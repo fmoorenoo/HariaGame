@@ -5,15 +5,18 @@ using System.Collections;
 public class Timer : MonoBehaviour
 {
     public TextMeshProUGUI timerText;
-    private float timeRemaining = 180f;
+    public AudioSource audioSource;
+    public AudioClip timeUpSound; 
+
+    private float timeRemaining = 10f;
     private bool isRunning = false;
-    public Animator jugadorAnimator; 
+    private bool hasPlayedSound = false; 
 
     void Start()
     {
-        if (jugadorAnimator == null)
+        if (audioSource == null)
         {
-            Debug.LogError("Animator del jugador no asignado.");
+            audioSource = GetComponent<AudioSource>();
         }
     }
 
@@ -36,5 +39,11 @@ public class Timer : MonoBehaviour
 
         isRunning = false;
         timerText.text = "00:00";
+
+        if (!hasPlayedSound && audioSource != null && timeUpSound != null)
+        {
+            audioSource.PlayOneShot(timeUpSound);
+            hasPlayedSound = true;
+        }
     }
 }

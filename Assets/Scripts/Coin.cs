@@ -8,6 +8,8 @@ public class Coin : MonoBehaviour
     private bool isCollected = false;
     private Vector3 startPosition;
 
+    [SerializeField] private Transform[] spawnPoints;
+
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
@@ -16,13 +18,19 @@ public class Coin : MonoBehaviour
             audioSource = gameObject.AddComponent<AudioSource>();
         }
 
+        if (spawnPoints.Length > 0)
+        {
+            int randomIndex = Random.Range(0, spawnPoints.Length);
+            transform.position = spawnPoints[randomIndex].position;
+        }
+
         startPosition = transform.position;
     }
 
     void Update()
     {
-        transform.position = startPosition + new Vector3(0, Mathf.Sin(Time.time * 2f) * 0.3f, 0);
-        transform.Rotate(Vector3.up * 50f * Time.deltaTime);
+        float rotationSpeed = 90f;
+        transform.Rotate(Vector3.up * rotationSpeed * Time.deltaTime);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -39,16 +47,27 @@ public class Coin : MonoBehaviour
 
             if (audioSource != null && pickupSound != null)
             {
-                Debug.Log("Playing pickup sound.");
                 audioSource.PlayOneShot(pickupSound);
-                StartCoroutine(DisableAfterSound(pickupSound.length));
             }
+
+            StartCoroutine(MoveUpAndDisable());
         }
     }
 
-    private IEnumerator DisableAfterSound(float delay)
+    private IEnumerator MoveUpAndDisable()
     {
-        yield return new WaitForSeconds(delay);
+        float duration = 1f; 
+        float elapsed = 0f;
+        Vector3 startPos = transform.position;
+        Vector3 endPos = startPos + Vector3.up * 20f; 
+
+        while (elapsed < duration)
+        {
+            transform.position = Vector3.Lerp(startPos, endPos, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
         gameObject.SetActive(false);
     }
 }

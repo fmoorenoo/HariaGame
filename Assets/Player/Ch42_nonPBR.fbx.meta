@@ -8,27 +8,27 @@ ModelImporter:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Ch42_1001_Diffuse
-    second: {fileID: 2800000, guid: 178e189b43c833884befb703cfb2017d, type: 3}
+    second: {fileID: 2800000, guid: 8faf273dc8d22174a986f3abe7dc7f2b, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Ch42_1001_Glossiness
-    second: {fileID: 2800000, guid: f0394616b31e22575bf334a9a08aa5cc, type: 3}
+    second: {fileID: 2800000, guid: 27f6d5daad94f8d4e9d2594c7a2ef524, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Ch42_1001_Normal
-    second: {fileID: 2800000, guid: 566a3e98b55aaabec8791986c2872917, type: 3}
+    second: {fileID: 2800000, guid: c6d3c949648b9d64d87ee8f8c044d4d1, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Ch42_1001_Specular
-    second: {fileID: 2800000, guid: 5f826d5e969c8eb5faa132fbff6429d5, type: 3}
+    second: {fileID: 2800000, guid: 13e7f743ca43fd946ae576aa8d831f2b, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Ch42_1002_Diffuse
-    second: {fileID: 2800000, guid: 83c57590aff79e41aadecb3bc10e6dc7, type: 3}
+    second: {fileID: 2800000, guid: 64c335177dbecd34fae05979eb8670bb, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

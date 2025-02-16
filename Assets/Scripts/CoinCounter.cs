@@ -4,18 +4,29 @@ using TMPro;
 public class CoinCounter : MonoBehaviour
 {
     public TextMeshProUGUI coinText;
-    private int totalCoins = 3;
+    public AudioSource oneCoinLeftSound;
+    private int totalCoins = 5;
     private int currentCoins = 0;
+    private bool soundPlayed = false; 
 
     public void AddCoin()
     {
         currentCoins++;
         coinText.text = currentCoins + "/" + totalCoins;
 
-        if (currentCoins >= totalCoins)
+        if (currentCoins == totalCoins - 1 && !soundPlayed)
         {
-            Debug.Log("¡Has recolectado todas las monedas!");
+            if (oneCoinLeftSound != null)
+            {
+                oneCoinLeftSound.Play();
+                Debug.Log("Reproduciendo sonido de última moneda.");
+            }
+            else
+            {
+                Debug.LogWarning("No se ha asignado un sonido en `oneCoinLeftSound`.");
+            }
+
+            soundPlayed = true; 
         }
     }
 }
-
