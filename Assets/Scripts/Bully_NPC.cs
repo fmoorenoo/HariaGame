@@ -24,6 +24,8 @@ public class Bully_NPC : MonoBehaviour
 
     public AudioSource golpeAudio;
     public AudioSource caidaAudio; 
+    public AudioSource alertaAudio; 
+    public AudioSource persecucionAudio; 
     public float tiempoEsperaGolpe = 0.5f;
     public float velocidadRotacion = 8f;
 
@@ -63,16 +65,6 @@ public class Bully_NPC : MonoBehaviour
         {
             Debug.LogError("Jugador no asignado.");
         }
-
-        if (golpeAudio == null)
-        {
-            golpeAudio = GetComponent<AudioSource>();
-        }
-
-        if (caidaAudio == null)
-        {
-            caidaAudio = GetComponent<AudioSource>();
-        }
     }
 
     void Update()
@@ -81,9 +73,14 @@ public class Bully_NPC : MonoBehaviour
 
         if (PuedeVerJugador())
         {
+            if (!persiguiendo)
+            {
+                persiguiendo = true;
+                StartCoroutine(IniciarPersecucionSonido()); 
+            }
+
             AI.speed = VelocidadPersecucion;
             AI.destination = Jugador.position;
-            persiguiendo = true;
 
             if (animator != null)
             {
@@ -96,6 +93,8 @@ public class Bully_NPC : MonoBehaviour
             if (persiguiendo)
             {
                 persiguiendo = false;
+                DetenerSonidosPersecucion(); 
+
                 if (Objetivos.Length > 0)
                 {
                     Objetivo = Objetivos[Random.Range(0, Objetivos.Length)];
@@ -130,9 +129,10 @@ public class Bully_NPC : MonoBehaviour
             }
         }
 
-        if (Vector3.Distance(transform.position, Jugador.position) < 2f && !golpeando && !golpeIniciado)
+        if (Vector3.Distance(transform.position, Jugador.position) < 2.5f && !golpeando && !golpeIniciado)
         {
             golpeIniciado = true;
+            DetenerSonidosPersecucion(); 
             StartCoroutine(GolpearJugador());
         }
     }
@@ -161,12 +161,38 @@ public class Bully_NPC : MonoBehaviour
         return false;
     }
 
+    IEnumerator IniciarPersecucionSonido()
+    {
+        if (alertaAudio != null && !alertaAudio.isPlaying)
+        {
+            alertaAudio.Play();
+            yield return new WaitForSeconds(alertaAudio.clip.length);
+        }
+
+        if (persecucionAudio != null && !persecucionAudio.isPlaying)
+        {
+            persecucionAudio.loop = true;
+            persecucionAudio.Play();
+        }
+    }
+
+    void DetenerSonidosPersecucion()
+    {
+        if (persecucionAudio != null && persecucionAudio.isPlaying)
+        {
+            persecucionAudio.loop = false;
+            persecucionAudio.Stop();
+        }
+    }
+
     IEnumerator GolpearJugador()
     {
         golpeando = true;
         AI.isStopped = true;
 
         yield return StartCoroutine(MirarHaciaJugador());
+
+        DetenerSonidosPersecucion();
 
         animator.SetBool("isPunching", true);
 

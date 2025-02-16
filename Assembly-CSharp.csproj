@@ -78,6 +78,7 @@
     <Compile Include="Assets\Scripts\ExitDoorInteraction.cs" />
     <Compile Include="Assets\Scripts\CoinCounter.cs" />
     <Compile Include="Assets\Scripts\DoorInteraction.cs" />
+    <Compile Include="Assets\Scripts\InmovilizedSound.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

@@ -5,6 +5,7 @@ using System.Collections;
 public class Timer : MonoBehaviour
 {
     public TextMeshProUGUI timerText;
+    public TextMeshProUGUI stopTriggerText;
     public AudioSource audioSource;
     public AudioClip timeUpSound;
 
@@ -30,6 +31,12 @@ public class Timer : MonoBehaviour
     {
         while (timeRemaining > 0)
         {
+            if (stopTriggerText != null && stopTriggerText.gameObject.activeSelf)
+            {
+                StopTimer();
+                yield break;
+            }
+
             timeRemaining -= 1f;
             int minutes = Mathf.FloorToInt(timeRemaining / 60);
             int seconds = Mathf.FloorToInt(timeRemaining % 60);
@@ -52,5 +59,4 @@ public class Timer : MonoBehaviour
         isRunning = false;
         StopAllCoroutines();
     }
-
 }

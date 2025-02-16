@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI; 
 
 public class PlayerController : MonoBehaviour
 {
@@ -26,8 +27,11 @@ public class PlayerController : MonoBehaviour
     private int isRunningHash;
     private int isFallingHash;
 
-    public TextMeshProUGUI countdownText; 
-    private bool hasFallen = false; 
+    public TextMeshProUGUI countdownText;
+    private bool hasFallen = false;
+
+    public GameObject immobilizedButton;
+    public TextMeshProUGUI immobilizedText; 
 
     void Start()
     {
@@ -37,9 +41,19 @@ public class PlayerController : MonoBehaviour
 
         isWalkingHash = Animator.StringToHash("isWalking");
         isRunningHash = Animator.StringToHash("isRunning");
-        isFallingHash = Animator.StringToHash("isFalling"); 
+        isFallingHash = Animator.StringToHash("isFalling");
 
         audioSource.loop = true;
+
+        if (immobilizedButton != null)
+        {
+            immobilizedButton.SetActive(false);
+        }
+
+        if (immobilizedText != null)
+        {
+            immobilizedText.gameObject.SetActive(false);
+        }
     }
 
     void Update()
@@ -50,6 +64,17 @@ public class PlayerController : MonoBehaviour
             {
                 audioSource.Stop();
             }
+
+            if (immobilizedButton != null)
+            {
+                immobilizedButton.SetActive(true);
+            }
+
+            if (immobilizedText != null)
+            {
+                immobilizedText.gameObject.SetActive(true);
+            }
+
             return;
         }
 
@@ -127,10 +152,18 @@ public class PlayerController : MonoBehaviour
 
     void TriggerFall()
     {
-        hasFallen = true; 
-
-
-        isImmobilized = true; 
+        hasFallen = true;
+        isImmobilized = true;
         animator.SetBool(isFallingHash, true);
+
+        if (immobilizedButton != null)
+        {
+            immobilizedButton.SetActive(true);
+        }
+
+        if (immobilizedText != null)
+        {
+            immobilizedText.gameObject.SetActive(true);
+        }
     }
 }
