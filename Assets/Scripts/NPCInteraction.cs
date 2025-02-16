@@ -15,10 +15,10 @@ public class NPCInteraction : MonoBehaviour
     private Text uiTextComponent;
     private TextMeshProUGUI tmpTextComponent;
 
-    public GameObject timerUI; // UI del temporizador
-    public GameObject coinCounterUI; // UI del contador de monedas
-    public CoinCounter coinCounterScript; // Referencia al script del contador de monedas
-    public GameObject[] coins; // Array para almacenar todas las monedas en la escena
+    public GameObject timerUI;
+    public GameObject coinCounterUI; 
+    public CoinCounter coinCounterScript;
+    public GameObject[] coins; 
 
     void Start()
     {
@@ -41,11 +41,9 @@ public class NPCInteraction : MonoBehaviour
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();
 
-        // Asegurar que el temporizador y el contador de monedas están desactivados al inicio
         if (timerUI != null) timerUI.SetActive(false);
         if (coinCounterUI != null) coinCounterUI.SetActive(false);
 
-        // Desactivar todas las monedas al inicio
         if (coins != null)
         {
             foreach (GameObject coin in coins)
@@ -117,7 +115,6 @@ public class NPCInteraction : MonoBehaviour
             if (subtitlesUI != null)
                 subtitlesUI.SetActive(false);
 
-            // Activar temporizador y contador de monedas
             if (timerUI != null)
             {
                 timerUI.SetActive(true);
@@ -129,7 +126,6 @@ public class NPCInteraction : MonoBehaviour
                 coinCounterUI.SetActive(true);
             }
 
-            // Activar todas las monedas cuando el audio termine
             if (coins != null)
             {
                 foreach (GameObject coin in coins)

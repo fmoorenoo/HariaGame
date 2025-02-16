@@ -7,6 +7,15 @@ public class Timer : MonoBehaviour
     public TextMeshProUGUI timerText;
     private float timeRemaining = 180f;
     private bool isRunning = false;
+    public Animator jugadorAnimator; 
+
+    void Start()
+    {
+        if (jugadorAnimator == null)
+        {
+            Debug.LogError("Animator del jugador no asignado.");
+        }
+    }
 
     public void StartTimer()
     {
