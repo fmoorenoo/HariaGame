@@ -7,22 +7,32 @@ public class NPCInteraction : MonoBehaviour
     public GameObject player;
     public GameObject interactionTextUI;
     public AudioSource audioSource;
-    public string subtitlesText = "A ver... Me vas a tener que traer todas las monedas del patio. Y no tengo todo el día.";
+
+    public AudioClip initialAudio;
+    public AudioClip notEnoughCoinsAudio;
+    public AudioClip allCoinsCollectedAudio;
+
+    public string initialSubtitles = "A ver... Me vas a tener que traer todas las monedas del patio. Y no tengo todo el día.";
+    public string notEnoughCoinsSubtitles = "Todavía te faltan monedas, no me hagas perder el tiempo.";
+    public string allCoinsCollectedSubtitles = "¡Muy bien! Has recogido todas las monedas, ahora sigue adelante.";
+    public bool HasKey { get; private set; } = false;
 
     private bool isPlayerNear = false;
     private bool isAudioPlaying = false;
-    private bool hasActivatedFeatures = false; 
+    private bool hasActivatedFeatures = false;
+    private bool hasCompletedFinalDialogue = false; 
+
     private GameObject subtitlesUI;
-    private Text uiTextComponent;
     private TextMeshProUGUI tmpTextComponent;
 
     public GameObject timerUI;
     public GameObject coinCounterUI;
     public CoinCounter coinCounterScript;
     public GameObject[] coins;
+    
+    public Image keyImageUI; 
 
-    public GameObject wetFloor;
-    public GameObject water;
+    private bool hasTalkedBefore = false; 
 
     void Start()
     {
@@ -34,7 +44,6 @@ public class NPCInteraction : MonoBehaviour
         if (subtitlesUI != null)
         {
             subtitlesUI.SetActive(false);
-            uiTextComponent = subtitlesUI.GetComponent<Text>();
             tmpTextComponent = subtitlesUI.GetComponent<TextMeshProUGUI>();
         }
         else
@@ -56,37 +65,95 @@ public class NPCInteraction : MonoBehaviour
             }
         }
 
-        if (wetFloor != null) wetFloor.SetActive(false);
-        if (water != null) water.SetActive(false);
+        if (keyImageUI != null)
+        {
+            keyImageUI.gameObject.SetActive(false);
+        }
     }
 
     void Update()
     {
-        if (isPlayerNear && !isAudioPlaying)
+        if (isPlayerNear && !isAudioPlaying && Input.GetKeyDown(KeyCode.E))
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            PrepareFinalDialogue(); 
+            PlayDialogue(); 
+        }
+    }
+
+    void PrepareFinalDialogue()
+    {
+        if (coinCounterScript != null && coinCounterScript.HasCollectedAllCoins())
+        {
+            hasCompletedFinalDialogue = true; 
+
+            if (timerUI != null)
             {
-                if (audioSource != null && audioSource.clip != null)
+                Timer timerScript = timerUI.GetComponent<Timer>();
+                if (timerScript != null)
                 {
-                    audioSource.Play();
-                    isAudioPlaying = true;
-                    interactionTextUI.SetActive(false);
-
-                    if (subtitlesUI != null)
-                    {
-                        subtitlesUI.SetActive(true);
-
-                        if (uiTextComponent != null)
-                        {
-                            uiTextComponent.text = subtitlesText;
-                        }
-                        else if (tmpTextComponent != null)
-                        {
-                            tmpTextComponent.text = subtitlesText;
-                        }
-                    }
+                    timerScript.StopTimer();
                 }
             }
+
+            if (timerUI != null) timerUI.SetActive(false);
+            if (coinCounterUI != null) coinCounterUI.SetActive(false);
+        }
+    }
+
+    void PlayDialogue()
+    {
+        if (audioSource == null) return;
+
+        isAudioPlaying = true;
+        interactionTextUI.SetActive(false);
+
+        if (subtitlesUI != null)
+        {
+            subtitlesUI.SetActive(true);
+        }
+
+        if (!hasTalkedBefore)
+        {
+            if (initialAudio != null)
+            {
+                audioSource.clip = initialAudio;
+                audioSource.Play();
+                UpdateSubtitles(initialSubtitles);
+            }
+            hasTalkedBefore = true;
+        }
+        else if (coinCounterScript != null && coinCounterScript.HasCollectedAllCoins())
+        {
+            if (allCoinsCollectedAudio != null)
+            {
+                audioSource.clip = allCoinsCollectedAudio;
+                audioSource.Play();
+                UpdateSubtitles(allCoinsCollectedSubtitles);
+            }
+            
+            HasKey = true;
+
+            if (keyImageUI != null)
+            {
+                keyImageUI.gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            if (notEnoughCoinsAudio != null)
+            {
+                audioSource.clip = notEnoughCoinsAudio;
+                audioSource.Play();
+                UpdateSubtitles(notEnoughCoinsSubtitles);
+            }
+        }
+    }
+
+    void UpdateSubtitles(string text)
+    {
+        if (tmpTextComponent != null)
+        {
+            tmpTextComponent.text = text;
         }
     }
 
@@ -120,9 +187,9 @@ public class NPCInteraction : MonoBehaviour
                 interactionTextUI.SetActive(true);
 
             if (subtitlesUI != null)
-                subtitlesUI.SetActive(false);
+                subtitlesUI.SetActive(false); 
 
-            if (!hasActivatedFeatures) 
+            if (!hasActivatedFeatures)
             {
                 if (timerUI != null)
                 {
@@ -143,17 +210,7 @@ public class NPCInteraction : MonoBehaviour
                     }
                 }
 
-                if (wetFloor != null)
-                {
-                    wetFloor.SetActive(true);
-                }
-
-                if (water != null)
-                {
-                    water.SetActive(true);
-                }
-
-                hasActivatedFeatures = true; 
+                hasActivatedFeatures = true;
             }
         }
     }

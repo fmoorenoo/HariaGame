@@ -6,11 +6,11 @@ public class Timer : MonoBehaviour
 {
     public TextMeshProUGUI timerText;
     public AudioSource audioSource;
-    public AudioClip timeUpSound; 
+    public AudioClip timeUpSound;
 
-    private float timeRemaining = 10f;
+    private float timeRemaining = 180f;
     private bool isRunning = false;
-    private bool hasPlayedSound = false; 
+    private bool hasPlayedSound = false;
 
     void Start()
     {
@@ -46,4 +46,11 @@ public class Timer : MonoBehaviour
             hasPlayedSound = true;
         }
     }
+
+    public void StopTimer()
+    {
+        isRunning = false;
+        StopAllCoroutines();
+    }
+
 }

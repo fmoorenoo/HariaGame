@@ -23,7 +23,7 @@ public class Bully_NPC : MonoBehaviour
     private Animator jugadorAnimator;
 
     public AudioSource golpeAudio;
-    public AudioSource caidaAudio; // AudioSource para el sonido de caída
+    public AudioSource caidaAudio; 
     public float tiempoEsperaGolpe = 0.5f;
     public float velocidadRotacion = 8f;
 
